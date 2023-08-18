@@ -1,0 +1,115 @@
+use std::io;
+
+struct Employee {
+    employee_name: String,
+    employee_id: i32,
+    email: String,
+    age: u32,
+    phone_number: String,
+}
+
+impl Employee {
+    fn new() -> Employee {
+        Employee {
+            employee_name: String::new(),
+            employee_id: 0,
+            email: String::new(),
+            age: 0,
+            phone_number: String::new(),
+        }
+    }
+}
+
+fn main() {
+    let mut employees: Vec<Employee> = Vec::new();
+    let mut input = String::new();
+
+    loop {
+        println!("Enter employee details or type 'exit' to quit:");
+
+        let mut employee = Employee::new();
+
+        println!("Employee Name:");
+        io::stdin().read_line(&mut input).expect("Failed to read line");
+        if input.trim() == "exit" {
+            break;
+        }
+        employee.employee_name = input.trim().to_string();
+
+        println!("Employee ID:");
+        input.clear();
+        io::stdin().read_line(&mut input).expect("Failed to read line");
+        employee.employee_id = input.trim().parse().expect("Invalid employee ID");
+
+        println!("Email:");
+        input.clear();
+        io::stdin().read_line(&mut input).expect("Failed to read line");
+        employee.email = input.trim().to_string();
+
+        println!("Age:");
+        input.clear();
+        io::stdin().read_line(&mut input).expect("Failed to read line");
+        employee.age = input.trim().parse().expect("Invalid age");
+
+        println!("Phone Number:");
+        input.clear();
+        io::stdin().read_line(&mut input).expect("Failed to read line");
+        employee.phone_number = input.trim().to_string();
+
+        employees.push(employee);
+
+        input.clear();
+    }
+
+    println!("Enter employee ID to search:");
+    input.clear();
+    io::stdin().read_line(&mut input).expect("Failed to read line");
+    let search_id: i32 = input.trim().parse().expect("Invalid employee ID");
+
+    let mut found_employee: Option<&Employee> = None;
+    for employee in &employees {
+        if employee.employee_id == search_id {
+            found_employee = Some(employee);
+            break;
+        }
+    }
+
+    match found_employee {
+        Some(employee) => {
+            println!("Found employee:");
+            println!("Name: {}", employee.employee_name);
+            println!("Employee ID: {}", employee.employee_id);
+            println!("Email: {}", employee.email);
+            println!("Age: {}", employee.age);
+            println!("Phone Number: {}", employee.phone_number);
+        }
+        None => {
+            println!("Employee not found.");
+        }
+    }
+
+    println!("Enter age to search:");
+    input.clear();
+    io::stdin().read_line(&mut input).expect("Failed to read line");
+    let search_age: u32 = input.trim().parse().expect("Invalid age");
+
+    let mut found_employees_with_age = Vec::new();
+    for employee in &employees {
+        if employee.age == search_age {
+            found_employees_with_age.push(employee);
+        }
+    }
+
+    if !found_employees_with_age.is_empty() {
+        println!("Employees with age {}:", search_age);
+        for employee in found_employees_with_age {
+            println!("Name: {}", employee.employee_name);
+            println!("Employee ID: {}", employee.employee_id);
+            println!("Email: {}", employee.email);
+            println!("Phone Number: {}", employee.phone_number);
+            println!();
+        }
+    } else {
+        println!("No employees found with age {}.", search_age);
+    }
+}
